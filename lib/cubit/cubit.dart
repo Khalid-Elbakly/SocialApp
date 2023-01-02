@@ -135,4 +135,22 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
       emit(SocialAppErrorState(error));
     });
   }
+
+  File? postImage;
+
+  Future pickPostImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null)
+      return;
+    else {
+      final imageTemp = File(image.path);
+      postImage = imageTemp;
+      emit(SocialImagePirckerState());
+    }
+  }
+
+  void removeImage(){
+    postImage = null;
+    emit(RemoveImageState());
+  }
 }
