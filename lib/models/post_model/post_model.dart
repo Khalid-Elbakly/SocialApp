@@ -4,9 +4,10 @@ class PostModel{
   String? profileImage;
   String? postImage;
   String? postText;
+  String? dateTime;
 
 
-  PostModel({required this.name,required this.uId,this.profileImage,this.postImage,this.postText});
+  PostModel({required this.name,required this.uId,required this.profileImage,required this.postImage,required this.postText,required this.dateTime});
 
   PostModel.fromJson(Map<String,dynamic> map){
     name = map['name'];
@@ -14,6 +15,7 @@ class PostModel{
     profileImage = map['profileImage'];
     postImage = map['postImage'];
     postText = map['postText'];
+    dateTime = map['dateTime'];
   }
 
   Map<String,dynamic> toMap(){
@@ -23,6 +25,7 @@ class PostModel{
       'profileImage' : profileImage,
       'postImage' : postImage,
       'postText' : postText,
+      'dateTime' : dateTime,
     };
   }
 }

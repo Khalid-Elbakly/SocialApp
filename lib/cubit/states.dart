@@ -26,4 +26,10 @@ class UploadCoverImageSuccess extends SocialAppStates{}
 
 class UploadCoverImageError extends SocialAppStates{}
 
+class UploadPostLoading extends SocialAppStates{}
+
+class UploadPostSuccess extends SocialAppStates{}
+
+class UploadPostError extends SocialAppStates{}
+
 class RemoveImageState extends SocialAppStates{}

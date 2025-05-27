@@ -13,6 +13,9 @@ class NewPostScreen extends StatelessWidget {
     return BlocConsumer<SocialAppCubit,SocialAppStates>(
     listener: (context,state) {},
       builder: (context,state) {
+
+        var cubit = SocialAppCubit.get(context);
+
         return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
@@ -32,7 +35,10 @@ class NewPostScreen extends StatelessWidget {
               ),
               actions: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      cubit.uploadPostImage(dateTime: DateTime.now().toString(),
+                          postText: postController.text);
+                    },
                     child: Text(
                       'POST',
                       style: TextStyle(color: Colors.black),
@@ -42,6 +48,9 @@ class NewPostScreen extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(children: [
+               if (state is UploadPostLoading)
+                const LinearProgressIndicator(),
+                SizedBox(height: 10,),
                 Row(
                   children: [
                     Row(
@@ -49,13 +58,13 @@ class NewPostScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 25,
                           backgroundImage: NetworkImage(
-                              'https://img.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg?w=996&t=st=1666499820~exp=1666500420~hmac=5fc2163ab8b833a6d7e4214f60d496f7259ed849c720fa31f109acc4c5aba77e'),
-                        ),
+                            cubit.userModel!.profileImage!
+                          ),),
                         SizedBox(
                           width: 15,
                         ),
                         Text(
-                          'Mody dody',
+                          cubit.userModel!.name!,
                           style: Theme
                               .of(context)
                               .textTheme
@@ -93,18 +102,21 @@ class NewPostScreen extends StatelessWidget {
                         ),
                       ),
                       IconButton(onPressed: (){
-                        SocialAppCubit.get(context).removeImage();
-                      }, icon: Icon(Icons.close))
+                        cubit.removeImage();
+                      }, icon: const CircleAvatar(
+                          child: Icon(Icons.close,color: Colors.white,)))
                     ],
                   ),
                 ),
+                SizedBox(height: 10,),
                 Row(
                   children: [
                     Expanded(
                       child: TextButton(onPressed: () {
-                        SocialAppCubit.get(context).pickPostImage();
+                        cubit.pickPostImage();
                       }, child: Row(
-                        children: [
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
                           Icon(IconBroken.Image),
                           SizedBox(width: 10,),
                           Text('Add Photo')

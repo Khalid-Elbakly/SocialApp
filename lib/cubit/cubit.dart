@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socialapp/cubit/states.dart';
 import 'package:socialapp/models/data_model/data_model.dart';
+import 'package:socialapp/models/post_model/post_model.dart';
 import 'package:socialapp/modules/chats/chats.dart';
 import 'package:socialapp/modules/feeds/feeds.dart';
 import 'package:socialapp/modules/new_post/new_post.dart';
@@ -24,9 +25,9 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
   void getUserData() {
     emit(SocialAppLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uID).get().then((value) {
-      emit(SocialAppSuccessState());
-      userModel = dataModel.fromJson(value.data()!);
       print(userModel);
+      userModel = dataModel.fromJson(value.data()!);
+      emit(SocialAppSuccessState());
     }).catchError((error) {
       emit(SocialAppErrorState(error.toString()));
     });
@@ -80,7 +81,7 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     }
   }
 
-  void uplaodProfileImage({required name, required phone, required bio}) {
+  void uploadProfileImage({required name, required phone, required bio}) {
     emit(SocialAppLoadingState());
     FirebaseStorage.instance
         .ref()
@@ -98,7 +99,7 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     });
   }
 
-  void uplaodCoverImage({required name, required phone, required bio}) {
+  void uploadCoverImage({required name, required phone, required bio}) {
     emit(SocialAppLoadingState());
     FirebaseStorage.instance
         .ref()
@@ -153,4 +154,49 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     postImage = null;
     emit(RemoveImageState());
   }
+
+  void uploadPostImage({
+    required dateTime, required postText
+}) {
+    emit(UploadPostLoading());
+    FirebaseStorage.instance
+        .ref()
+        .child('posts/${Uri.file(postImage!.path).pathSegments.last}')
+        .putFile(postImage!)
+        .then((value) => value.ref.getDownloadURL().then((value) {
+          emit(UploadPostSuccess());
+          createPost(postText: postText, dateTime: dateTime,postImageUrl: value);
+    }).catchError((error) {
+      emit(UploadPostError());
+      print(error);
+    }))
+        .catchError((error) {
+      emit(UploadPostError());
+      print(error);
+    });
+  }
+
+  void createPost({required postText, required dateTime, postImageUrl}) {
+    emit(UploadPostLoading());
+
+    PostModel model = PostModel(
+        name: userModel!.name,
+        uId: userModel!.uId,
+        profileImage: userModel!.profileImage,
+        postText: postText,
+        postImage: (postImage == null )? '' : postImageUrl,
+        dateTime: dateTime,
+        );
+
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(model.toMap())
+        .then((value) {
+          emit(UploadPostSuccess());
+    })
+        .catchError((error) {
+      emit(UploadPostError());
+    });
+  }
+
 }

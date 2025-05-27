@@ -115,7 +115,7 @@ class EditProfileScreen extends StatelessWidget {
                               Container(
                                 width: double.infinity,
                                 child: MaterialButton(onPressed: (){
-                                    cubit.uplaodCoverImage(name: nameController.text,bio: bioController.text,phone: phoneController.text);
+                                    cubit.uploadCoverImage(name: nameController.text,bio: bioController.text,phone: phoneController.text);
                                   },child: Text('Upload Cover Image'),color: Colors.blue,),
                               ),
                             ],
@@ -128,7 +128,7 @@ class EditProfileScreen extends StatelessWidget {
                             Container(
                               width: double.infinity,
                               child: MaterialButton(onPressed: (){
-                                cubit.uplaodProfileImage(name: nameController.text,bio: bioController.text,phone: phoneController.text);
+                                cubit.uploadProfileImage(name: nameController.text,bio: bioController.text,phone: phoneController.text);
                               },child: Text('Upload Profile Image'),color: Colors.blue,),
                             ),
                           ],
