@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialAppCubit()..getUserData(),
+      create: (context) => SocialAppCubit()..getUserData()..getPosts(),
       child: MaterialApp(
         theme: ThemeData(
           // This is the theme of your application.

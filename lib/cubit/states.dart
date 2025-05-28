@@ -14,6 +14,27 @@ class SocialAppErrorState extends SocialAppStates{
   SocialAppErrorState(this.error);
 }
 
+
+class GetPostsLoadingState extends SocialAppStates{}
+
+class GetPostsSuccessState extends SocialAppStates{}
+
+class GetPostsErrorState extends SocialAppStates{
+  final error;
+
+  GetPostsErrorState(this.error);
+}
+
+
+class LikePostSuccess extends SocialAppStates{}
+
+class LikePostError extends SocialAppStates{}
+
+class CommentPostSuccess extends SocialAppStates{}
+
+class CommentPostError extends SocialAppStates{}
+
+
 class SocialBottomNavBarState extends SocialAppStates{}
 
 class SocialImagePirckerState extends SocialAppStates{}

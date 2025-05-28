@@ -199,4 +199,67 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     });
   }
 
+  List<PostModel> posts = [];
+  List<int> likes = [];
+
+  void getPosts(){
+    FirebaseFirestore.instance.collection('posts').get().
+    then((value) {
+      for (var element in value.docs) {
+        element.reference.collection('likes').get()
+            .then((value) {
+              likes.add(value.docs.length);
+              element.reference.collection('comment').get()
+          .then((value) {
+                List comments = [];
+
+                comments.clear();
+            value.docs.forEach((comment) {
+
+              comments.add(comment.data());
+
+            });
+            posts.add(PostModel.fromJson(element.data(), element.id,comments));
+            emit(GetPostsSuccessState());
+          })
+          .catchError((error){
+
+          });
+        }).catchError((error){
+          emit(GetPostsErrorState(error));
+        });
+      }}).
+    catchError((error) {
+      emit(GetPostsErrorState(error));
+    });
+  }
+
+  void likePost(postId){
+    FirebaseFirestore.instance
+        .collection('posts').doc(postId)
+        .collection('likes').doc(userModel!.uId)
+        .set({'likes' : true}).
+    then((value) {
+      emit(LikePostSuccess());
+    })
+        .catchError((error){
+          emit(LikePostError());
+    });
+  }
+
+  void commentPost(postId,comment){
+    FirebaseFirestore.instance
+        .collection('posts').doc(postId)
+        .collection('comment')
+        .add({
+      'name' : userModel!.name,
+      'profileImage' : userModel!.profileImage,
+      'comment' : comment}).
+    then((value) {
+      emit(CommentPostSuccess());
+    })
+        .catchError((error){
+      emit(CommentPostError());
+    });
+  }
 }
