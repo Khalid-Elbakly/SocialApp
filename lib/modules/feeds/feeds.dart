@@ -188,7 +188,8 @@ Widget buildPostItem(PostModel model,context,index) {
                 child: InkWell(
                     onTap: () {
                       //print(SocialAppCubit.get(context).posts[index].comments!.length);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Comments(no: index,)));
+                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => Comments(no: index,)));
+                    showBottomSheet(context: context, builder: (context) => Comments(no: index,),constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height/1.5));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

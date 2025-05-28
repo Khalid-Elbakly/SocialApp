@@ -10,20 +10,24 @@ class Comments extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Comments',style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(
           color: Colors.black
         ),
       ),
-      body: ListView.separated(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) => buildCommentItem(
-              SocialAppCubit.get(context).posts[no], context,index),
-          separatorBuilder: (context, index) => SizedBox(
-                height: 20,
-              ),
-          itemCount: SocialAppCubit.get(context).posts[no].comments!.length),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) => buildCommentItem(
+                SocialAppCubit.get(context).posts[no], context,index),
+            separatorBuilder: (context, index) => SizedBox(
+                  height: 20,
+                ),
+            itemCount: SocialAppCubit.get(context).posts[no].comments!.length),
+      ),
     );
   }
 }
