@@ -15,7 +15,7 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SocialAppCubit, SocialAppStates>(
         builder: (context, state) {
-          var model = SocialAppCubit.get(context).userModel;
+          var model = SocialAppCubit.get(context).user;
           var cubit = SocialAppCubit.get(context);
 
           nameController.text = '${model!.name}';

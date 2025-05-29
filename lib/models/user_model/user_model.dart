@@ -1,4 +1,4 @@
-class dataModel{
+class userModel{
   String? name;
   String? email;
   String? phone;
@@ -7,9 +7,9 @@ class dataModel{
   String? coverImage;
   String? bio;
 
-  dataModel({required this.name,required this.uId,required this.email,required this.phone,this.profileImage,this.coverImage,this.bio});
+  userModel({required this.name,required this.uId,required this.email,required this.phone,this.profileImage,this.coverImage,this.bio});
 
-  dataModel.fromJson(Map<String,dynamic> map){
+  userModel.fromJson(Map<String,dynamic> map){
     email = map['email'];
     name = map['name'];
     phone = map['phone'];

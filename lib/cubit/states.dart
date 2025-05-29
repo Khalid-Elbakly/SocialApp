@@ -1,5 +1,3 @@
-import 'package:socialapp/cubit/states.dart';
-
 abstract class SocialAppStates{}
 
 class SocialAppIntialState extends SocialAppStates{}
@@ -23,6 +21,17 @@ class GetPostsErrorState extends SocialAppStates{
   final error;
 
   GetPostsErrorState(this.error);
+}
+
+
+class GetUsersLoadingState extends SocialAppStates{}
+
+class GetUsersSuccessState extends SocialAppStates{}
+
+class GetUsersErrorState extends SocialAppStates{
+  final error;
+
+  GetUsersErrorState(this.error);
 }
 
 

@@ -58,13 +58,13 @@ class NewPostScreen extends StatelessWidget {
                         CircleAvatar(
                           radius: 25,
                           backgroundImage: NetworkImage(
-                            cubit.userModel!.profileImage!
+                            cubit.user!.profileImage!
                           ),),
                         SizedBox(
                           width: 15,
                         ),
                         Text(
-                          cubit.userModel!.name!,
+                          cubit.user!.name!,
                           style: Theme
                               .of(context)
                               .textTheme

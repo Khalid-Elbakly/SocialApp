@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socialapp/cubit/states.dart';
-import 'package:socialapp/models/data_model/data_model.dart';
 import 'package:socialapp/models/post_model/post_model.dart';
+import 'package:socialapp/models/user_model/user_model.dart';
 import 'package:socialapp/modules/chats/chats.dart';
 import 'package:socialapp/modules/feeds/feeds.dart';
 import 'package:socialapp/modules/new_post/new_post.dart';
@@ -15,18 +15,19 @@ import 'package:socialapp/modules/settings/settings.dart';
 import 'package:socialapp/modules/users/users.dart';
 import 'package:socialapp/shared/network/endpoints.dart';
 
+
 class SocialAppCubit extends Cubit<SocialAppStates> {
   SocialAppCubit() : super(SocialAppIntialState());
 
   static SocialAppCubit get(context) => BlocProvider.of(context);
 
-  dataModel? userModel;
+  userModel? user;
 
   void getUserData() {
     emit(SocialAppLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uID).get().then((value) {
-      print(userModel);
-      userModel = dataModel.fromJson(value.data()!);
+      print(user);
+      user = userModel.fromJson(value.data()!);
       emit(SocialAppSuccessState());
     }).catchError((error) {
       emit(SocialAppErrorState(error.toString()));
@@ -49,6 +50,10 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     if (index == 2)
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => NewPostScreen()));
+    if(index == 1){
+      currentIndex = 1;
+      getAllUsers();
+    }
     else
       currentIndex = index;
     emit(SocialBottomNavBarState());
@@ -118,18 +123,18 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
   }
 
   void updateUser({required name, required phone, required bio,profileImage,coverImage}) {
-    dataModel model = dataModel(
+    userModel model = userModel(
         name: name,
-        uId: userModel!.uId,
-        email: userModel!.email,
+        uId: user!.uId,
+        email: user!.email,
         phone: phone,
-        profileImage: profileImage??userModel!.profileImage,
-        coverImage: coverImage??userModel!.coverImage,
+        profileImage: profileImage??user!.profileImage,
+        coverImage: coverImage??user!.coverImage,
         bio: bio);
 
     FirebaseFirestore.instance
         .collection('users')
-        .doc(userModel!.uId)
+        .doc(user!.uId)
         .update(model.toMap())
         .then((value) => getUserData())
         .catchError((error) {
@@ -180,9 +185,9 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     emit(UploadPostLoading());
 
     PostModel model = PostModel(
-        name: userModel!.name,
-        uId: userModel!.uId,
-        profileImage: userModel!.profileImage,
+        name: user!.name,
+        uId: user!.uId,
+        profileImage: user!.profileImage,
         postText: postText,
         postImage: (postImage == null )? '' : postImageUrl,
         dateTime: dateTime,
@@ -237,7 +242,7 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
   void likePost(postId){
     FirebaseFirestore.instance
         .collection('posts').doc(postId)
-        .collection('likes').doc(userModel!.uId)
+        .collection('likes').doc(user!.uId)
         .set({'likes' : true}).
     then((value) {
       emit(LikePostSuccess());
@@ -252,8 +257,8 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
         .collection('posts').doc(postId)
         .collection('comment')
         .add({
-      'name' : userModel!.name,
-      'profileImage' : userModel!.profileImage,
+      'name' : user!.name,
+      'profileImage' : user!.profileImage,
       'comment' : comment}).
     then((value) {
       emit(CommentPostSuccess());
@@ -261,5 +266,20 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
         .catchError((error){
       emit(CommentPostError());
     });
+  }
+
+  List<userModel> users = [];
+
+  void getAllUsers(){
+    GetUsersLoadingState();
+    FirebaseFirestore.instance.collection('users').get().
+    then((value) {
+      for (var element in value.docs) {
+            users.add(userModel.fromJson(element.data()));
+            emit(GetUsersSuccessState());
+          }})
+              .catchError((error){
+                emit(GetUsersErrorState((error){}));
+          });
   }
 }

@@ -229,7 +229,7 @@ Widget buildPostItem(PostModel model,context,index) {
                       CircleAvatar(
                         radius: 15,
                         backgroundImage: NetworkImage(
-                            '${SocialAppCubit.get(context).userModel!.profileImage}'),
+                            '${SocialAppCubit.get(context).user!.profileImage}'),
                       ),
                       SizedBox(
                         width: 10,

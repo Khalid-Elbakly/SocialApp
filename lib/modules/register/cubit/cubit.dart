@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialapp/models/data_model/data_model.dart';
+import 'package:socialapp/models/user_model/user_model.dart';
 import 'package:socialapp/modules/register/cubit/states.dart';
 import 'package:socialapp/shared/network/endpoints.dart';
 import 'package:socialapp/shared/network/local/cache_helper.dart';
@@ -30,7 +30,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
       required String email,
       required String phone,
       required String uId}) {
-    dataModel user = dataModel(
+    userModel user = userModel(
         name: name,
         uId: uId,
         email: email,
