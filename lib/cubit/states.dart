@@ -62,4 +62,12 @@ class UploadPostSuccess extends SocialAppStates{}
 
 class UploadPostError extends SocialAppStates{}
 
+class SendMessageSuccess extends SocialAppStates{}
+
+class SendMessageError extends SocialAppStates{}
+
+class GetMessagesSuccess extends SocialAppStates{}
+
+class GetMessagesError extends SocialAppStates{}
+
 class RemoveImageState extends SocialAppStates{}

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socialapp/cubit/cubit.dart';
 import 'package:socialapp/cubit/states.dart';
 import 'package:socialapp/models/user_model/user_model.dart';
+import 'package:socialapp/modules/chat_details/chat_details.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({Key? key}) : super(key: key);
@@ -35,18 +36,24 @@ class ChatsScreen extends StatelessWidget {
 Widget buildChatItem(userModel model, context) {
   return Padding(
     padding: const EdgeInsets.all(20.0),
-    child: Row(children: [
-      CircleAvatar(
-        radius: 25,
-        backgroundImage: NetworkImage('${model.profileImage}'),
-      ),
-      const SizedBox(
-        width: 15,
-      ),
-      Text(
-        '${model.name}',
-        style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 15),
-      )
-    ]),
+    child: InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatDetailsScreen(model: model,)));
+      },
+      child: Row(
+          children: [
+        CircleAvatar(
+          radius: 25,
+          backgroundImage: NetworkImage('${model.profileImage}'),
+        ),
+        const SizedBox(
+          width: 15,
+        ),
+        Text(
+          '${model.name}',
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 15),
+        )
+      ]),
+    ),
   );
 }
