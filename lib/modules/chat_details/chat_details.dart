@@ -20,89 +20,105 @@ class ChatDetailsScreen extends StatelessWidget {
       SocialAppCubit.get(context).getMessages(model.uId!);
       return BlocConsumer<SocialAppCubit, SocialAppStates>(
         listener: (context, state) {},
-        builder: (context, state) =>
-            Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                iconTheme: const IconThemeData(color: Colors.black),
-                title: Row(children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage('${model.profileImage}'),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    '${model.name}',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontSize: 15),
-                  )
-                ]),
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            iconTheme: const IconThemeData(color: Colors.black),
+            title: Row(children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage('${model.profileImage}'),
               ),
-              body: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    ConditionalBuilder(
-                      condition: SocialAppCubit.get(context).messages.isNotEmpty,
-                      builder:(context) => Expanded(
-                        child: ListView.separated(
-                            itemBuilder: (context,index) {
-                              var message = SocialAppCubit.get(context).messages[index];
-                              if(SocialAppCubit.get(context).user!.uId == message.senderId){
-                               return buildMyMessage(message);
-                              }
-                             return buildMessage(message);
-                            },
-                            separatorBuilder: (context,index) => const SizedBox(height: 15,),
-                            itemCount: SocialAppCubit.get(context).messages.length),
-                      ),
-                      fallback: (context) => const Center(child: CircularProgressIndicator()),
-                    ),
-                    const Spacer(),
-                    Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
-                          borderRadius: BorderRadius.circular(15)),
-                      padding: EdgeInsetsDirectional.only(start: 10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Enter message here',
-                              ),
-                              controller: messageController,
+              const SizedBox(
+                width: 15,
+              ),
+              Text(
+                '${model.name}',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 15),
+              )
+            ]),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                ConditionalBuilder(
+                  condition: SocialAppCubit.get(context).messages.isNotEmpty,
+                  builder: (context) => Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          var message =
+                              SocialAppCubit.get(context).messages[index];
+                          if (SocialAppCubit.get(context).user!.uId ==
+                              message.senderId) {
+                            return buildMyMessage(message);
+                          }
+                          return buildMessage(message);
+                        },
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 15,
                             ),
-                          ),
-                          Container(
-                            color: Colors.blue,
-                            child: IconButton(
-                              icon: const Icon(
-                                IconBroken.Send,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                SocialAppCubit.get(context).sendMessage(
-                                    text: messageController.text,
-                                    receiverId: model.uId!,
-                                    dateTime: DateTime.now().toString());
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                        itemCount: SocialAppCubit.get(context).messages.length),
+                  ),
+                  fallback: (context) =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(15)),
+                    padding: EdgeInsetsDirectional.only(start: 10),
+                    child: Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              SocialAppCubit.get(context).pickChatImage();
+                            },
+                            icon: Icon(IconBroken.Image)),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Enter message here',
+                            ),
+                            controller: messageController,
+                          ),
+                        ),
+                        Container(
+                          color: Colors.blue,
+                          child: IconButton(
+                            icon: const Icon(
+                              IconBroken.Send,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              // SocialAppCubit.get(context).sendMessage(
+                              //     text: messageController.text,
+                              //     receiverId: model.uId!,
+                              //     dateTime: DateTime.now().toString());
+
+                              SocialAppCubit.get(context).uploadChatImage(
+                                  receiverId: model.uId!,
+                                  text: messageController.text,
+                                  dateTime: DateTime.now().toString());
+                              messageController.clear();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
+          ),
+        ),
       );
     });
   }
@@ -119,9 +135,19 @@ Widget buildMessage(MessageModel model) {
                 topStart: Radius.circular(10),
                 topEnd: Radius.circular(10)),
             color: Colors.grey[300]),
-        child: Text(
-          model.text!,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              model.text!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            if(model.image != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Image(image: NetworkImage(model.image!,),width: 50,height: 50,),
+              ),
+          ],
         )),
   );
 }
@@ -137,9 +163,19 @@ Widget buildMyMessage(MessageModel model) {
                 topStart: Radius.circular(10),
                 topEnd: Radius.circular(10)),
             color: Colors.blue[200]),
-        child: Text(
-          model.text!,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              model.text!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            if(model.image != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Image(image: NetworkImage(model.image!,),width: 50,height: 50,),
+            ),
+          ],
         )),
   );
 }

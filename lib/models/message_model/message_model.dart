@@ -1,25 +1,33 @@
-class MessageModel{
+class MessageModel {
   String? text;
   String? receiverId;
   String? senderId;
   String? dateTime;
+  String? image;
 
+  MessageModel({
+    required this.text,
+    required this.senderId,
+    required this.receiverId,
+    required this.dateTime,
+    this.image
+  });
 
-  MessageModel({required this.text,required this.senderId,required this.receiverId,required this.dateTime,});
-
-  MessageModel.fromJson(Map<String,dynamic> map){
+  MessageModel.fromJson(Map<String, dynamic> map) {
     text = map['text'];
     receiverId = map['receiverId'];
     senderId = map['senderId'];
     dateTime = map['dateTime'];
+    image = map['image'];
   }
 
-  Map<String,dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
-      'text' : text,
-      'receiverId' : receiverId,
-      'senderId' : senderId,
-      'dateTime' : dateTime,
-      };
+      'text': text,
+      'receiverId': receiverId,
+      'senderId': senderId,
+      'dateTime': dateTime,
+      'image' : image
+    };
   }
 }

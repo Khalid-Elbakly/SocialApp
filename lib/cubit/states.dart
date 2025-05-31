@@ -66,6 +66,12 @@ class SendMessageSuccess extends SocialAppStates{}
 
 class SendMessageError extends SocialAppStates{}
 
+class UploadChatImageLoading extends SocialAppStates{}
+
+class UploadChatImageSuccess extends SocialAppStates{}
+
+class UploadChatImageError extends SocialAppStates{}
+
 class GetMessagesSuccess extends SocialAppStates{}
 
 class GetMessagesError extends SocialAppStates{}

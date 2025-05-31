@@ -279,10 +279,12 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
   void sendMessage(
       {required String text,
       required String receiverId,
-      required String dateTime}) {
+      required String dateTime,
+       chatImageUrl}) {
     MessageModel model = MessageModel(
         text: text,
         senderId: user!.uId,
+        image: (chatImage ==null) ? '' : chatImageUrl,
         receiverId: receiverId,
         dateTime: dateTime);
 
@@ -311,6 +313,39 @@ class SocialAppCubit extends Cubit<SocialAppStates> {
     }).catchError((error) {
       emit(SendMessageError());
     });
+  }
+
+  File? chatImage;
+
+  Future pickChatImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null)
+      return;
+    else {
+      final imageTemp = File(image.path);
+      chatImage = imageTemp;
+      emit(SocialImagePirckerState());
+    }
+  }
+
+
+  void uploadChatImage({
+    required String text,
+    required String receiverId,
+    required String dateTime,
+  }) {
+    emit(UploadChatImageLoading());
+    FirebaseStorage.instance
+        .ref()
+        .child('users/${user!.uId}/chats/$receiverId/messages/${Uri.file(chatImage!.path).pathSegments.last}')
+        .putFile(chatImage!)
+        .then((value) => value.ref.getDownloadURL().then((value) {
+          sendMessage(text: text, receiverId: receiverId, dateTime: dateTime,chatImageUrl: value);
+          emit(UploadChatImageSuccess());
+    }).catchError((error) {
+      emit(UploadPostError());
+      print(error);
+    }));
   }
 
   List<MessageModel> messages = [];
