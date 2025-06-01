@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:socialapp/cubit/cubit.dart';
 import 'package:socialapp/cubit/states.dart';
 import 'package:socialapp/home_layout.dart';
@@ -10,13 +12,35 @@ import 'package:socialapp/modules/login/login_screen.dart';
 import 'package:socialapp/shared/network/endpoints.dart';
 import 'package:socialapp/shared/network/local/cache_helper.dart';
 
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  Fluttertoast.showToast(msg: 'onBackgrond');
+}
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  var token = await FirebaseMessaging.instance.getToken();
+  print(token);
   await CacheHelper.init();
   uID = CacheHelper.getData(key: 'uId');
-  print(uID);
+//  print(uID);
 
+  FirebaseMessaging.onMessage.listen((event) {
+    Fluttertoast.showToast(
+      backgroundColor: Colors.green,
+      msg: 'onMessage'
+    );
+    print(event.data);
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    Fluttertoast.showToast(msg: 'onMessageOpenApp');
+  });
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Widget widget;
   if(uID != null)
     widget = HomeLayout();

@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\khald\\Downloads\\SocialApp-main\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\khald\\.gradle\\caches\\transforms-3\\20f823619f43a4a8e10e3ffa9ebda186\\transformed\\core-1.8.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\khald\\.gradle\\caches\\transforms-3\\d3a6223f3d158a85f567019693834b09\\transformed\\core-1.10.1\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

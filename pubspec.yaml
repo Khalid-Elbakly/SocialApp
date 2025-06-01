@@ -46,6 +46,7 @@ dependencies:
   firebase_storage: ^11.0.6
   cloud_firestore: ^4.0.2
   bottom_sheet:
+  firebase_messaging: ^14.7.10
 
 
 dev_dependencies:
